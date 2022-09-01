@@ -6,6 +6,11 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import Storage from "./utils/storage.js";
 
+// get dirname of the current file
+const __dirname = dirname(fileURLToPath(import.meta.url));
+// get path to assets folder in root of project
+const assetsPath = path.join(__dirname, "../assets/");
+
 // for handling file uploads
 const upload = multer();
 
@@ -17,42 +22,42 @@ function setupRouter() {
 			.status(error.status || 500)
 			.send(error.message || error || "Internal server error");
 	}
-  
-  // get dirname of the current file
-  const __dirname = dirname(fileURLToPath(import.meta.url));
-  // get path to assets folder in root of project
-  const assetsPath = path.join(__dirname, "../assets/");
 
-  // serve static assets
-  router.use("/assets", express.static(assetsPath));
-	
-  // post a file to the server
+	router.get("/", function (req, res) {
+		return res.status(200).send("Welcome to Oliver's storage!");
+	});
+
+	// serve static assets
+	router.use("/assets", express.static(assetsPath));
+
+	// post a file to the server
 	router.post("/assets", upload.array("files"), function (req, res) {
 		try {
-      // throw error if no files were uploaded
-      if (!req.files || !req.files.length) {
-        throw new Error("No files were uploaded");
-      }
+			// throw error if no files were uploaded
+			if (!req.files || !req.files.length) {
+				throw new Error("No files were uploaded");
+			}
 
-      // save files
-			const assets = Storage
-      .saveMultipleFiles(req.files, req.body.namespace)
-      .map((asset) => {
-        // get server url
-        const serverUrl = req.protocol + "://" + req.get("host");
-        // define asset url
-        const url = `${serverUrl}/assets/${asset.name}`;
-        // append asset name to server url
-        asset.setUrl(url);
-        // remove content field from asset
-        delete asset.content;
-        // remove path field from asset
-        delete asset.path;
+			// save files
+			const assets = Storage.saveMultipleFiles(
+				req.files,
+				req.body.namespace
+			).map((asset) => {
+				// get server url
+				const serverUrl = req.protocol + "://" + req.get("host");
+				// define asset url
+				const url = `${serverUrl}/assets/${asset.name}`;
+				// append asset name to server url
+				asset.setUrl(url);
+				// remove content field from asset
+				delete asset.content;
+				// remove path field from asset
+				delete asset.path;
 
-        return asset;
-      })
-      
-      return res.status(201).send(assets);
+				return asset;
+			});
+
+			return res.status(201).send(assets);
 		} catch (error) {
 			return handleErrors(error, res);
 		}
@@ -91,16 +96,9 @@ function setupRouter() {
 	return router;
 }
 
-function setupStaticRouter() {
-	const router = express.Router();
-
-	return router;
-}
-
 const app = express();
 app.use(cors());
 app.use(morgan("tiny"));
 app.use(setupRouter());
-app.use(setupStaticRouter());
 
 export default app;
