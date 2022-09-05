@@ -1,13 +1,14 @@
 {
   "name": "storage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "server static files",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "docker:build": "./scripts/docker-build.sh"
   },
-  "author": "this-oliver",
+  "author": "this-oliver <olivermanzi.dev@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

@@ -5,6 +5,7 @@ import multer from "multer";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import Storage from "./utils/storage.js";
+import FileUtil from "./utils/file.js";
 
 // get dirname of the current file
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -24,7 +25,12 @@ function setupRouter() {
 	}
 
 	router.get("/", function (req, res) {
-		return res.status(200).send("Welcome to Oliver's storage!");
+		// get readme in root of project
+		const readmePath = path.join(__dirname, "../README.md");
+		// read readme file
+		const readme = FileUtil.readFromFile(readmePath);
+		// send welcome message and readme
+		return res.status(200).send(readme);
 	});
 
 	// serve static assets
