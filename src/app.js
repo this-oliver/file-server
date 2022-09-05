@@ -73,8 +73,17 @@ function setupRouter() {
 		}
 	});
 
+	router.post("/tags/:name", upload.array("files"), function (req, res) {
+		try {
+			const files = Storage.saveMultipleFiles(req.files, req.params.name);
+			return res.status(201).send(files);
+		} catch (error) {
+			return handleErrors(error, res);
+		}
+	});
+
 	// get all files with a specific tag from the server
-	router.get("/assets/tags/:name", function (req, res) {
+	router.get("/tags/:name", function (req, res) {
 		try {
 			const asset = Storage.getFilesByTag(req.params.name);
 			return res.status(200).send(asset);
@@ -84,10 +93,20 @@ function setupRouter() {
 	});
 
 	// delete all files with a specific tag from the server
-	router.delete("/assets/tags/:name", function (req, res) {
+	router.delete("/tags/:name", function (req, res) {
 		try {
 			const deleted = Storage.removeFilesByTag(req.params.name);
 			return res.status(203).send(deleted);
+		} catch (error) {
+			return handleErrors(error, res);
+		}
+	});
+
+	router.get("/meta", function (req, res) {
+		try {
+			const fileNames = Storage.getStorageMeta();
+			const count = fileNames.length;
+			return res.status(200).send({ count, fileNames });
 		} catch (error) {
 			return handleErrors(error, res);
 		}

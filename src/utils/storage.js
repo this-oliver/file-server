@@ -136,4 +136,7 @@ export default {
 		return files.map((file) => this.removeFile(file.name));
 	},
 
+	getStorageMeta() {
+		return FileUtil.getFilesInDirectory(StoragePath);
+	},
 };
