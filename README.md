@@ -2,14 +2,27 @@
 
 A basic server to host your static assets (a.k.a files, pictures, pdfs)
 
-## Getting started
+## Installation
 
 ```bash
-# root
+# clone repo
+git clone https://github.com/this-oliver/file-server
+
+# install dependencies
 npm install
 
-# running server
-npm run dev
+# create an 'assets' folder for storing files (ignored by git)
+mkdir assets
+```
+
+## Usage
+
+```bash
+# start server (localhost:4000 by default)
+npm start
+
+# alternatively, you can specify a port
+PORT=3000 npm start
 ```
 
 ## How it works

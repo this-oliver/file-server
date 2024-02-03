@@ -1,12 +1,12 @@
 {
-  "name": "storage",
+  "name": "file-storage",
   "version": "1.0.1",
   "description": "server static files",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "docker:build": "docker build -t storage:latest .",
+    "docker:build": "docker build -t file-storage:latest .",
     "docker:run": "docker run -p 4000:4000 -d -v $(pwd)/assets:/server/assets --name s3 storage:latest"
   },
   "author": "this-oliver <olivermanzi.dev@gmail.com>",
