@@ -20,8 +20,7 @@ jobs:
       
       # get package version for tagging the image
       - name: Get version
-        id: version
-        run: echo ::set-output name=PACKAGE_VERSION::$(node -p "require('./package.json').version")
+        run: echo "VERSION=$(node -p -e "require('./package.json').version")" >> $GITHUB_ENV
 
       # used to build for cross-platform (i.e. apple silicon and amd64)
       - name: Set up QEMU
@@ -37,6 +36,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # build image with version env tag
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
@@ -44,4 +44,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            thisoliver/file-server:${{ steps.version.outputs.PACKAGE_VERSION }}
+            thisoliver/file-server:$VERSION
