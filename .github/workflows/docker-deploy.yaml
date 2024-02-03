@@ -1,0 +1,47 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+      
+      # get package version for tagging the image
+      - name: Get version
+        id: version
+        run: echo ::set-output name=PACKAGE_VERSION::$(node -p "require('./package.json').version")
+
+      # used to build for cross-platform (i.e. apple silicon and amd64)
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      # builds the images for the specified platforms
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            thisoliver/file-server:${{ steps.version.outputs.PACKAGE_VERSION }}
