@@ -4,7 +4,7 @@ WORKDIR /server
 
 # fetch dependencies
 COPY package.json ./
-COPY pnpm-lock.json ./
+COPY pnpm-lock.yaml ./
 RUN npm install
 
 # copy source code
