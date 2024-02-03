@@ -1,6 +1,6 @@
 {
   "name": "file-storage",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "server static files",
   "main": "src/index.js",
   "scripts": {
