@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "docker:build": "docker build -t file-storage:latest .",
-    "docker:run": "docker run -p 4000:4000 -d -v $(pwd)/assets:/server/assets --name s3 storage:latest"
+    "docker:run": "docker run -p 4000:4000 -d -v $(pwd)/assets:/server/assets --name s3 file-storage:latest"
   },
   "author": "this-oliver <olivermanzi.dev@gmail.com>",
   "license": "ISC",
